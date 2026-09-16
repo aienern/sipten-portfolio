@@ -1,77 +1,116 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export default function SplineScene() {
-  const [rotate, setRotate] = useState({ x: 15, y: 20 });
+  const canvasRef = useRef(null);
 
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setRotate({ x: -y * 50, y: x * 50 });
-  };
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
 
-  const handleMouseLeave = () => {
-    setRotate({ x: 15, y: 20 });
-  };
+    let animationFrameId;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Mouse & Scroll tracking
+    let mouse = { x: width / 2, y: height / 2, targetX: width / 2, targetY: height / 2 };
+    let scrollProgress = 0;
+
+    const handleMouseMove = (e) => {
+      mouse.targetX = e.clientX;
+      mouse.targetY = e.clientY;
+    };
+
+    const handleScroll = () => {
+      scrollProgress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Particle Galaxy Generation
+    const particleCount = 600;
+    const particles = [];
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        baseAngle: Math.random() * Math.PI * 2,
+        radius: Math.random() * 300 + 40,
+        size: Math.random() * 2.2 + 0.6,
+        speed: (Math.random() * 0.01 + 0.003) * (Math.random() > 0.5 ? 1 : -1),
+        opacity: Math.random() * 0.8 + 0.2,
+        z: Math.random() * 2 - 1,
+      });
+    }
+
+    const render = () => {
+      mouse.x += (mouse.targetX - mouse.x) * 0.06;
+      mouse.y += (mouse.targetY - mouse.y) * 0.06;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Scroll ke sath center position aur vortex ka spread change hoga
+      const centerX = width / 2 + (mouse.x - width / 2) * 0.1;
+      const centerY = (height / 2) - (scrollProgress * 150) + (mouse.y - height / 2) * 0.1;
+
+      particles.forEach((p) => {
+        p.baseAngle += p.speed;
+
+        // Scroll expand effect (jaise video mein scroll karne par phailta hai)
+        const currentRadius = p.radius + (scrollProgress * 250);
+
+        const x = centerX + Math.cos(p.baseAngle) * currentRadius;
+        const y = centerY + Math.sin(p.baseAngle) * (currentRadius * 0.65);
+
+        // Mouse proximity glow & attraction
+        const dx = mouse.x - x;
+        const dy = mouse.y - y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        let dynamicSize = p.size;
+        let opacity = p.opacity;
+
+        if (dist < 120) {
+          dynamicSize *= 1.8;
+          opacity = 1;
+        }
+
+        ctx.beginPath();
+        ctx.arc(x, y, dynamicSize, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+        ctx.shadowBlur = dist < 120 ? 15 : 6;
+        ctx.shadowColor = 'rgba(255, 255, 255, 0.9)';
+        ctx.fill();
+      });
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
 
   return (
-    <div 
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="w-full h-full relative overflow-hidden flex items-center justify-center pointer-events-auto cursor-pointer perspective-[1200px]"
-    >
-      {/* Zero-Lag Ambient Glow */}
-      <div className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-cyan-600/20 via-indigo-600/20 to-purple-600/20 blur-[100px] pointer-events-none"></div>
+    <div className="w-full h-full relative overflow-hidden flex items-center justify-center pointer-events-none bg-[#030305]">
+      {/* Sci-Fi Ambient Glow */}
+      <div className="absolute w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-cyan-900/15 via-indigo-900/10 to-transparent blur-[150px] pointer-events-none"></div>
 
-      {/* 3D Holographic Name Core */}
-      <div 
-        className="relative w-52 h-52 sm:w-64 sm:h-64 transition-transform duration-75 ease-out"
-        style={{
-          transformStyle: 'preserve-3d',
-          transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)`,
-        }}
-      >
-        {/* Front Face */}
-        <div className="absolute inset-0 rounded-2xl glass-panel border border-cyan-500/40 bg-cyan-950/40 backdrop-blur-md flex flex-col items-center justify-center shadow-[0_0_40px_rgba(6,182,212,0.2)] text-center p-4"
-             style={{ transform: 'translateZ(90px)' }}>
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/50 mb-2">
-            <span className="text-white font-black text-xl">SR</span>
-          </div>
-          <h4 className="text-sm font-extrabold text-white tracking-wider">Sipten Raja</h4>
-          <span className="text-[10px] font-medium text-cyan-300 uppercase tracking-widest mt-1">Full-Stack Creator</span>
-        </div>
-
-        {/* Back Face */}
-        <div className="absolute inset-0 rounded-2xl glass-panel border border-purple-500/40 bg-purple-950/40 backdrop-blur-md flex flex-col items-center justify-center shadow-2xl"
-             style={{ transform: 'rotateY(180deg) translateZ(90px)' }}>
-          <span className="text-xs font-bold text-purple-300 tracking-widest uppercase">UI/UX & 3D Web</span>
-        </div>
-
-        {/* Right Face */}
-        <div className="absolute inset-0 rounded-2xl glass-panel border border-indigo-500/40 bg-indigo-950/40 backdrop-blur-md flex flex-col items-center justify-center shadow-2xl"
-             style={{ transform: 'rotateY(90deg) translateZ(90px)' }}>
-          <span className="text-xs font-bold text-indigo-300 tracking-widest uppercase">Automation</span>
-        </div>
-
-        {/* Left Face */}
-        <div className="absolute inset-0 rounded-2xl glass-panel border border-pink-500/40 bg-pink-950/40 backdrop-blur-md flex flex-col items-center justify-center shadow-2xl"
-             style={{ transform: 'rotateY(-90deg) translateZ(90px)' }}>
-          <span className="text-xs font-bold text-pink-300 tracking-widest uppercase">Next.js</span>
-        </div>
-
-        {/* Top Face */}
-        <div className="absolute inset-0 rounded-2xl glass-panel border border-yellow-500/40 bg-yellow-950/40 backdrop-blur-md flex flex-col items-center justify-center shadow-2xl"
-             style={{ transform: 'rotateX(90deg) translateZ(90px)' }}>
-          <span className="text-xs font-bold text-yellow-300 tracking-widest uppercase">Dev 2026</span>
-        </div>
-
-        {/* Bottom Face */}
-        <div className="absolute inset-0 rounded-2xl glass-panel border border-teal-500/40 bg-teal-950/40 backdrop-blur-md flex flex-col items-center justify-center shadow-2xl"
-             style={{ transform: 'rotateX(-90deg) translateZ(90px)' }}>
-          <span className="text-xs font-bold text-teal-300 tracking-widest uppercase">Systems</span>
-        </div>
-      </div>
+      {/* Dynamic Scroll & Mouse Particle Vortex */}
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-auto" />
     </div>
   );
 }
