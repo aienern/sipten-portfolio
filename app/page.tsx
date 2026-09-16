@@ -24,11 +24,11 @@ import {
 } from 'lucide-react';
 
 export default function Home() {
-  const cardRef = useRef(null);
-  const heroRef = useRef(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const heroRef = useRef<HTMLDivElement | null>(null);
 
   // Mouse move 3D tilt effect handler for widgets & 3D interaction
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const card = cardRef.current;
     const rect = card.getBoundingClientRect();
@@ -173,11 +173,11 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Video Style Scroll Scrub Timeline Badge */}
-        <div className="scroll-badge text-[11px] font-mono tracking-widest text-gray-400 uppercase border border-white/10 px-6 py-2 rounded-full glass-panel flex items-center gap-2 z-20 mt-4">
+        {/* Video Style Scroll Scrub Timeline Badge - Ab click karne par direct Contact section par jayega */}
+        <a href="#contact" className="scroll-badge text-[11px] font-mono tracking-widest text-gray-400 hover:text-indigo-300 uppercase border border-white/10 hover:border-indigo-500/40 px-6 py-2 rounded-full glass-panel flex items-center gap-2 z-20 mt-4 transition cursor-pointer">
           <span className="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
-          ↓ SCROLL TO SCRUB TIMELINE
-        </div>
+          ↓ CLICK FOR CONTACT / SCROLL
+        </a>
       </section>
 
       {/* SECTION 2: ABOUT & SKILLS */}
