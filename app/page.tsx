@@ -27,7 +27,6 @@ export default function Home() {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const heroRef = useRef<HTMLDivElement | null>(null);
 
-  // Mouse move 3D tilt effect handler for widgets & 3D interaction
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const card = cardRef.current;
@@ -43,7 +42,6 @@ export default function Home() {
     cardRef.current.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1)';
   };
 
-  // Video style Scroll-driven 3D scrub effect
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -62,14 +60,12 @@ export default function Home() {
     <main className="min-h-screen bg-[#030305] text-[#f3f4f6] relative overflow-x-hidden scroll-smooth selection:bg-indigo-500 selection:text-white">
       <Navbar />
 
-      {/* Background Spline 3D Scene - Fully Interactive & Cinematic */}
       <div className="fixed inset-0 z-0 pointer-events-auto opacity-70 scale-105 transition-transform duration-1000">
         <SplineScene />
       </div>
 
       <div className="fixed inset-0 z-0 bg-gradient-to-b from-[#030305]/60 via-transparent to-[#030305] pointer-events-none"></div>
 
-      {/* Cinematic Styles */}
       <style jsx global>{`
         html {
           scroll-behavior: smooth;
@@ -138,7 +134,7 @@ export default function Home() {
         </a>
       </div>
 
-      {/* SECTION 1: HERO WITH VIDEO STYLE CINEMATIC SCROLL */}
+      {/* SECTION 1: HERO */}
       <section id="home" className="relative z-20 min-h-screen flex flex-col items-center justify-center px-6 pt-36 sm:pt-44 pb-20 text-center">
         <div className="relative flex items-center justify-center mb-8 lg:hidden">
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500/30 to-pink-500/30 blur-2xl animate-spin" style={{ animationDuration: '12s' }}></div>
@@ -147,7 +143,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Scroll Scrubbing Animated Hero Box */}
         <div ref={heroRef} className="transition-all duration-150 ease-out z-20">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-indigo-400 text-xs font-semibold uppercase tracking-widest mb-6 shadow-xl">
             <Sparkles className="w-4 h-4" /> Multidisciplinary Digital Creator
@@ -173,7 +168,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Video Style Scroll Scrub Timeline Badge - Ab click karne par direct Contact section par jayega */}
         <a href="#contact" className="scroll-badge text-[11px] font-mono tracking-widest text-gray-400 hover:text-indigo-300 uppercase border border-white/10 hover:border-indigo-500/40 px-6 py-2 rounded-full glass-panel flex items-center gap-2 z-20 mt-4 transition cursor-pointer">
           <span className="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
           ↓ CLICK FOR CONTACT / SCROLL
@@ -201,7 +195,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Skills Grid */}
         <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel text-indigo-400 text-xs font-semibold uppercase tracking-wider mb-3">
             <Sparkles className="w-3.5 h-3.5" /> Core Capabilities
@@ -272,7 +265,6 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
           <div className="glass-panel rounded-3xl border border-white/10 overflow-hidden flex flex-col justify-between">
             <div className="h-64 bg-black p-3 relative flex items-center justify-center border-b border-white/10 overflow-hidden gap-3">
               <div className="w-1/2 h-full rounded-xl overflow-hidden border border-white/10 shadow-lg relative group">
@@ -365,7 +357,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-
         </div>
 
         {/* AI Video Editing & CapCut Creations */}
@@ -477,19 +468,67 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SECTION 4: CONTACT */}
+      {/* SECTION 4: CONTACT WITH WORKING FORMSPREE */}
       <section id="contact" className="relative z-25 max-w-4xl mx-auto px-6 py-24">
-        <div className="glass-panel rounded-3xl p-8 sm:p-12 border border-white/10 shadow-2xl bg-gradient-to-br from-indigo-950/30 via-black to-purple-950/30 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-semibold border border-indigo-500/20 mb-4">
-            <Mail className="w-3.5 h-3.5" /> Get In Touch
+        <div className="glass-panel rounded-3xl p-8 sm:p-12 border border-white/10 shadow-2xl bg-gradient-to-br from-indigo-950/30 via-black to-purple-950/30">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-semibold border border-indigo-500/20 mb-4">
+              <Mail className="w-3.5 h-3.5" /> Get In Touch
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-4">Let's Build Something Amazing Together</h2>
+            <p className="text-gray-400 text-sm sm:text-base font-light max-w-xl mx-auto">
+              Have a project in mind, need data automation, or looking for a full-stack developer? Drop a message below.
+            </p>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-4">Let's Build Something Amazing Together</h2>
-          <p className="text-gray-400 text-sm sm:text-base font-light max-w-xl mx-auto mb-8">
-            Have a project in mind, need data automation, or looking for a full-stack developer? Drop a message and let's discuss.
-          </p>
-          <a href="mailto:siptenraja@gmail.com" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition glow-effect shadow-lg shadow-indigo-600/30">
-            <Send className="w-4 h-4" /> Send Direct Email
-          </a>
+
+          <form 
+            action="https://formspree.io/f/xeaojrkz" 
+            method="POST"
+            className="space-y-6 max-w-2xl mx-auto"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Your Name</label>
+                <input 
+                  type="text" 
+                  name="name" 
+                  required 
+                  placeholder="Sipten Raja" 
+                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500 transition"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Your Email</label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  required 
+                  placeholder="client@example.com" 
+                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500 transition"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Message</label>
+              <textarea 
+                name="message" 
+                rows={4} 
+                required 
+                placeholder="Write your project details..." 
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500 transition resize-none"
+              ></textarea>
+            </div>
+
+            <div className="text-center">
+              <button 
+                type="submit" 
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition glow-effect shadow-lg shadow-indigo-600/30 cursor-pointer"
+              >
+                <Send className="w-4 h-4" /> Send Message
+              </button>
+            </div>
+          </form>
         </div>
       </section>
 
